@@ -60,6 +60,7 @@ with ui.layout_sidebar():
 def bios_df():
     directory = Path(__file__).parent.parent
     df = pd.read_csv(f'{directory}/clean-data/bios_locs.csv')
+    df = df[df['born_country'] == input.country()]
     df = df[df['lat'].notna() & df['long'].notna()]
     return df
 
