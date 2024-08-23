@@ -11,11 +11,12 @@ ui.page_opts(fillable=True)
 # get all NOCs
 directory = Path(__file__).parent.parent
 nocs = pd.read_csv(f'{directory}/clean-data/noc_regions.csv')
+region_to_noc = dict(zip(nocs['NOC'],nocs['region']))
     
 
 with ui.layout_sidebar():
     with ui.sidebar(open='open'):
-        ui.input_select("country", "Select a country",nocs.NOC.unique().tolist())
+        ui.input_select("country", "Select a country",region_to_noc)
         ui.input_checkbox("winter","Include winter games?",True)
         ui.input_checkbox("medalists","Only include medalists?", True)
 
@@ -31,6 +32,7 @@ with ui.layout_sidebar():
             plt.xlabel('Year')
             plt.ylabel('Medal Count')
             plt.title("Medals by Year")
+
 
     with ui.card():
         "Heatmap of athletes"
