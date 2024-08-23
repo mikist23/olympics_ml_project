@@ -26,7 +26,11 @@ with ui.layout_sidebar():
         # print medals by country
         @render.plot
         def show_medals():
-            get_medals()
+            df = get_medals()
+            plt.plot(df['year'], df['medal'])
+            plt.xlabel('Year')
+            plt.ylabel('Medal Count')
+            plt.title("Medals by Year")
 
     with ui.card():
         "Heatmap of athletes"
@@ -66,4 +70,4 @@ def get_medals():
     medals = results[(results['medal'].notna()) & (~results['event'].str.endswith('(YOG)'))]
     medals_filtered = medals.drop_duplicates(['year','type','discipline','noc','event','medal'])
     medals_by_year = medals_filtered.groupby(['noc', 'year'])['medal'].count().loc[input.country()]
-    print(medals_by_year.reset_index())
+    return medals_by_year.reset_index()
