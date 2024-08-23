@@ -4,9 +4,11 @@ import pandas as pd
 from shiny.express import ui, input, render
 from shiny import reactive
 from pathlib import Path
+import folium
+from folium.plugins import HeatMap
 
 
-ui.page_opts(fillable=True)
+ui.page_opts()
 
 # get all NOCs
 directory = Path(__file__).parent.parent
@@ -37,6 +39,14 @@ with ui.layout_sidebar():
     with ui.card():
         "Heatmap of athletes"
         # Heatmap
+        @render.ui
+        def show_heatmap():
+            df = bios_df()
+            m = folium.Map(location=[df['lat'].mean(), df['long'].mean()], zoom_start=2)
+            heat_data = [[row['lat'], row['long']] for index , row in df.iterrows()]
+            HeatMap(heat_data).add_to(m)
+            return m
+
 
 
     with ui.card():
@@ -50,6 +60,7 @@ with ui.layout_sidebar():
 def bios_df():
     directory = Path(__file__).parent.parent
     df = pd.read_csv(f'{directory}/clean-data/bios_locs.csv')
+    df = df[df['lat'].notna() & df['long'].notna()]
     return df
 
 
