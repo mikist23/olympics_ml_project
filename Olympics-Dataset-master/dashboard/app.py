@@ -13,6 +13,7 @@ ui.page_opts()
 # get all NOCs
 directory = Path(__file__).parent.parent
 nocs = pd.read_csv(f'{directory}/clean-data/noc_regions.csv')
+nocs = nocs.sort_values('region', ascending=True)
 region_to_noc = dict(zip(nocs['NOC'],nocs['region']))
     
 
